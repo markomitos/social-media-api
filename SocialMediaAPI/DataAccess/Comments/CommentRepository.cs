@@ -17,6 +17,7 @@ namespace SocialMediaAPI.DataAccess.Comments
 
         public List<Comment> GetCommentsByUser(int userId)
         {
+            //return new List<Comment>();
             return _databaseContext.Comments.Where(c => c.IsActive()&&c.UserId == userId).ToList();
         }
 

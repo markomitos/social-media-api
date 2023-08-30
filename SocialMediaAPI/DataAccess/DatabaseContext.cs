@@ -26,10 +26,11 @@ namespace SocialMediaAPI.DataAccess
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-            modelBuilder.Entity<User>().HasMany<Post>().WithOne();
-            modelBuilder.Entity<User>().HasMany<Comment>().WithOne();
-            modelBuilder.Entity<Post>().HasMany<Comment>().WithOne();
+            modelBuilder.Entity<User>().HasMany<Post>().WithOne().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<User>().HasMany<Comment>().WithOne().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Post>().HasMany<Comment>().WithOne().OnDelete(DeleteBehavior.Restrict);
+            
+
             modelBuilder.Entity<Post>()
                 .Property(p => p.Tags)
                 .HasConversion(
@@ -48,7 +49,7 @@ namespace SocialMediaAPI.DataAccess
                     v => string.Join(',', v.ToString()),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList().Select(int.Parse).ToList()
                 );
-
+            
         }
     }
 }

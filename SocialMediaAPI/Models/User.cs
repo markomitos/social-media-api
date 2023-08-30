@@ -4,6 +4,7 @@ namespace SocialMediaAPI.Models
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,6 +17,7 @@ namespace SocialMediaAPI.Models
         public UserStatus Status { get; set; }
 
         public List<int> FollowedUsersIds { get; set; }
+        
 
         public User()
         {

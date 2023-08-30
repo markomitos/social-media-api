@@ -1,11 +1,19 @@
-﻿namespace SocialMediaAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace SocialMediaAPI.Models
 {
     public class Comment
     {
         public int Id { get; set; }
         public string Content { get; set; }
+        
         public int PostId { get; set; }
+        
+        
         public int UserId { get; set; }
+        
+        
 
         public CommentStatus Status { get; set; }
 
