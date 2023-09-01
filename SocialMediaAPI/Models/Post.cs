@@ -6,27 +6,26 @@
 
         public string Content { get; set; }
 
-        public List<string> Tags { get; set; }
+        public List<Tag> Tags { get; set; }
 
         public int UserId { get; set; }
 
-        public List<int> Likes { get; set; }
+        public List<User> Likes { get; set; }
 
         public PostStatus Status { get; set; }
 
         public Post()
         {
-            
+            Status = PostStatus.Active;
+            Likes ??= new List<User>();
+            Tags ??= new List<Tag>();
         }
 
-        public Post(Post post)
+        public static void CopyUnchangedProperties(Post post1, Post post2)
         {
-            Id = post.Id;
-            Content = post.Content;
-            Tags = post.Tags;
-            UserId = post.UserId;
-            Likes = post.Likes;
-            Status = post.Status;
+            post1.UserId = post2.UserId;
+            post1.Likes = post2.Likes;
+            post1.Status = post2.Status;
         }
 
         public bool IsActive()
@@ -49,10 +48,10 @@
             Status = PostStatus.Active;
         }
 
-        public void Like(int userId)
+        public void Like(User user)
         {
-            if (Likes.Contains(userId)) throw new Exception("User Already liked this post");
-            Likes.Add(userId);
+            if (Likes.Contains(user)) throw new Exception("User Already liked this post");
+            Likes.Add(user);
         }
     }
 }

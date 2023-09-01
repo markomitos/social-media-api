@@ -19,7 +19,6 @@ namespace SocialMediaAPI.Models
 
         public Comment()
         {
-            
 
         }
 
@@ -40,6 +39,13 @@ namespace SocialMediaAPI.Models
         public void Delete()
         {
             Status = CommentStatus.Deleted;
+        }
+
+        public static void CopyUnchangedProperties(Comment comment1, Comment comment2)
+        {
+            comment1.UserId = comment2.UserId;
+            comment1.PostId = comment2.PostId;
+            comment1.Status = comment2.Status;
         }
     }
 }

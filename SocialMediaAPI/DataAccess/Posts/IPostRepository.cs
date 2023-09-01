@@ -9,7 +9,7 @@ namespace SocialMediaAPI.DataAccess.Posts
 
         Post? GetPost(int id);
 
-        List<Post> GetPostsByCreator(int  creatorId);
+        List<Post> GetPostsByUser(int  creatorId);
 
         List<Post> GetPostsByTag(string tag);
         
@@ -19,13 +19,13 @@ namespace SocialMediaAPI.DataAccess.Posts
 
         bool DeletePost(int id);
 
-        Post? ArchivePost(int id);
+        bool ArchivePost(int id);
 
-        Post? ActivatePost(int id);
+        bool ActivatePost(int id);
 
         List<Post> GetMostPopularPosts(int maxPostsNumber);
 
-        Post? LikePost(int postId,int userId);
+        bool LikePost(int postId,User user);
 
 
 

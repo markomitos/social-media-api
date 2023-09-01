@@ -20,12 +20,12 @@ namespace SocialMediaAPI.DataAccess.Users
         public User? LogIn(string email, string password);
 
 
-        public User? DeactivateAccount(int id);
+        public bool DeactivateAccount(int id);
 
-        public User? ActivateAccount(int id);
+        public bool ActivateAccount(int id);
 
         public User? GetUser(string firstName, string lastName);
 
-        public User? FollowUser(int followerId, int followedId);
+        public bool FollowUser(int followerId, int followedId);
     }
 }

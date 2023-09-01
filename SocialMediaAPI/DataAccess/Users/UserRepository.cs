@@ -1,4 +1,6 @@
-﻿using SocialMediaAPI.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialMediaAPI.DTOs.Users;
+using SocialMediaAPI.Models;
 
 namespace SocialMediaAPI.DataAccess.Users
 {
@@ -13,18 +15,17 @@ namespace SocialMediaAPI.DataAccess.Users
 
         public List<User> GetUsers()
         {
-            return _databaseContext.Users.Where(u=>u.IsActive()).ToList();
+            return _databaseContext.Users.Where(u=>u.Status == UserStatus.Active).Include(f=>f.Followed).ToList();
         }
 
         public User? GetUser(int id)
         {
-            var user = _databaseContext.Users.FirstOrDefault(u => u.Id == id && u.IsActive());
-            return user;
+            return _databaseContext.Users.Where(u => u.Id == id && u.Status == UserStatus.Active).Include(f => f.Followed).FirstOrDefault();
         }
 
         public User? GetUser(string email)
         {
-            return _databaseContext.Users.FirstOrDefault(u => u.Email == email && u.IsActive());
+            return _databaseContext.Users.Where(u => u.Email == email && u.Status == UserStatus.Active).Include(f => f.Followed).FirstOrDefault();
         }
 
         public User? CreateUser(User user)
@@ -59,37 +60,42 @@ namespace SocialMediaAPI.DataAccess.Users
             return user;
         }
 
-        public User? DeactivateAccount(int id)
+        public bool DeactivateAccount(int id)
         {
             var user = GetUser(id);
-            if (user == null) return null;
+            if (user == null || !user.IsActive()) return false;
             user.DeactivateAccount();
             _databaseContext.SaveChanges();
-            return GetUser(id);
+            return true;
         }
 
-        public User? ActivateAccount(int id)
+        public bool ActivateAccount(int id)
         {
-            var user = GetUser(id);
-            if (user == null) return null;
+            var user = GetInactiveUser(id);
+            if (user == null || user.IsActive()) return false;
             user.ActivateAccount();
             _databaseContext.SaveChanges();
-            return GetUser(id);
+            return true;
+        }
+
+        private User? GetInactiveUser(int id)
+        {
+            return _databaseContext.Users.Where(u => u.Id == id && u.Status == UserStatus.Inactive).Include(f => f.Followed).FirstOrDefault();
         }
 
         public User? GetUser(string firstName, string lastName)
         {
-            return _databaseContext.Users.FirstOrDefault(u => u.FirstName == firstName && u.LastName == lastName && u.IsActive());
+            return _databaseContext.Users.Where(u => u.FirstName == firstName && u.LastName == lastName && u.Status == UserStatus.Active).Include(f => f.Followed).FirstOrDefault();
         }
 
-        public User? FollowUser(int followerId, int followedId)
+        public bool FollowUser(int followerId, int followedId)
         {
             var user = GetUser(followedId);
             var follower = GetUser(followerId);
-            if (user == null) return null;
-            follower.Follow(followedId);
+            if (user == null) return false;
+            follower.Follow(user);
             _databaseContext.SaveChanges();
-            return GetUser(followedId);
+            return true;
         }
     }
 }

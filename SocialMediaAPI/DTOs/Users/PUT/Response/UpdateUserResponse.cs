@@ -1,8 +1,9 @@
-﻿using SocialMediaAPI.Models;
+﻿using SocialMediaAPI.HATEOAS;
+using SocialMediaAPI.Models;
 
 namespace SocialMediaAPI.DTOs.Users.PUT.Response
 {
-    public class UpdateUserResponse
+    public class UpdateUserResponse:LinkCollection
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

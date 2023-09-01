@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Users\GET\Requests\" />
-    <Folder Include="DTOs\Users\PUT\Request\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

@@ -15,6 +15,8 @@ namespace SocialMediaAPI.DataAccess
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<User> Users { get; set; }
+        
+        public DbSet<Tag> Tags { get; set; }
 
         //sql server side programiranje ovde
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,30 +27,13 @@ namespace SocialMediaAPI.DataAccess
             }
 
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<Tag>().HasIndex(t => t.Content).IsUnique();
             modelBuilder.Entity<User>().HasMany<Post>().WithOne().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<User>().HasMany<Comment>().WithOne().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Post>().HasMany<Comment>().WithOne().OnDelete(DeleteBehavior.Restrict);
             
 
-            modelBuilder.Entity<Post>()
-                .Property(p => p.Tags)
-                .HasConversion(
-                    v => string.Join(',', v),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-                );
-            modelBuilder.Entity<Post>()
-                .Property(p => p.Likes)
-                .HasConversion(
-                    v => string.Join(',', v.ToString()),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList().Select(int.Parse).ToList()
-                );
-            modelBuilder.Entity<User>()
-                .Property(p => p.FollowedUsersIds)
-                .HasConversion(
-                    v => string.Join(',', v.ToString()),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList().Select(int.Parse).ToList()
-                );
+            
             
         }
     }

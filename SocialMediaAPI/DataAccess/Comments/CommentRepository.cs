@@ -12,18 +12,18 @@ namespace SocialMediaAPI.DataAccess.Comments
         }
         public List<Comment> GetComments()
         {
-            return _databaseContext.Comments.Where(c=>c.IsActive()).ToList();
+            return _databaseContext.Comments.Where(c=>c.Status == CommentStatus.Active).ToList();
         }
 
         public List<Comment> GetCommentsByUser(int userId)
         {
             //return new List<Comment>();
-            return _databaseContext.Comments.Where(c => c.IsActive()&&c.UserId == userId).ToList();
+            return _databaseContext.Comments.Where(c => c.Status == CommentStatus.Active&&c.UserId == userId).ToList();
         }
 
         public Comment? GetComment(int id)
         {
-            return _databaseContext.Comments.FirstOrDefault(c => c.Id == id && c.IsActive());
+            return _databaseContext.Comments.FirstOrDefault(c => c.Id == id && c.Status == CommentStatus.Active);
         }
 
         public Comment? CreateComment(Comment comment)
@@ -37,6 +37,7 @@ namespace SocialMediaAPI.DataAccess.Comments
         {
             var oldComment = GetComment(comment.Id);
             if (oldComment == null) return null;
+            Comment.CopyUnchangedProperties(comment,oldComment);
             _databaseContext.Entry(oldComment).CurrentValues.SetValues(comment);
             _databaseContext.SaveChanges();
             return GetComment(comment.Id);

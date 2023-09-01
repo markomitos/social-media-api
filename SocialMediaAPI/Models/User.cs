@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SocialMediaAPI.DTOs.Users;
 
 namespace SocialMediaAPI.Models
 {
@@ -16,26 +20,18 @@ namespace SocialMediaAPI.Models
 
         public UserStatus Status { get; set; }
 
-        public List<int> FollowedUsersIds { get; set; }
+        public List<User> Followed { get; set; }
         
+        public List<User> Followers { get; set; }
 
         public User()
         {
-
+            Followed ??= new List<User>();
+            Followers ??= new List<User>();
+            Status = UserStatus.Active;
         }
 
-        public User(User user)
-        {
-            Id = user.Id;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            Email = user.Email;
-            Password = user.Password;
-            Status = user.Status;
-            FollowedUsersIds = new List<int>();
-            FollowedUsersIds.AddRange(user.FollowedUsersIds.ToList());
-        }
-
+        
         public void DeactivateAccount()
         {
             Status = UserStatus.Inactive;
@@ -56,9 +52,10 @@ namespace SocialMediaAPI.Models
             return Status == UserStatus.Active;
         }
 
-        public void Follow(int followedId)
+        public void Follow(User followed)
         {
-            FollowedUsersIds.Add(followedId);
+            if (Followed.Contains(followed)) throw new Exception("User already followed!");
+            Followed.Add(followed);
         }
     }
 }
